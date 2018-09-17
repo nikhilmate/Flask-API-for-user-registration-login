@@ -46,20 +46,22 @@ def register():
         name = request.form['name']
         email = request.form['email']
         phone = request.form['phone']
-
-        file = request.files
+        file = request.files['file']
+        print(file)        
         if not name and not email and not phone:
             if not file:
-                name = 'error'
+                res = 'error'
         else:
             if file:
-                name = 'ok'
-        insert = cursor.execute('''INSERT INTO users VALUES (:id, :name, :phone, :email)''', {'id': 23223, 'name': name, 'phone': phone, 'email' : email})
+                res = 'ok'
+                filename = 'uploads/'+email+'.jpg'
+                file.save(filename)
+        insert = cursor.execute('''INSERT INTO users VALUES (:id, :name, :phone, :email)''', {'id': 122, 'name': name, 'phone': phone, 'email' : email})
         db.commit()
         if insert:
             print('INSERTEED!!!!!!!!!!!!!!!!!!!!')
         print(request.files, request.form)
-        res = Response(name, status=200, mimetype='text/plain')
+        res = Response(res, status=200, mimetype='text/plain')
         return res
 @app.route('/')
 def home():
